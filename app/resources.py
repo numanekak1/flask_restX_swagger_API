@@ -20,6 +20,7 @@ class CourseAPI(Resource):
     @ns.marshal_list_with(course_model) #taking output and return serialised way
     def get(self):
         return Course.query.all()
+
     @ns.expect(course_input_model)
     @ns.marshal_with(course_model)
     def post(self):
@@ -29,6 +30,29 @@ class CourseAPI(Resource):
         db.session.commit()
         return course,201
     
+@ns.route('/courses/<int:id>')
+class CourseAPI(Resource):
+    @ns.marshal_with(course_model)
+    def get(self,id):
+        course = Course.query.get(id)
+        return course
+
+
+@ns.route('/students/<int:id>')
+class StudentAPI(Resource):
+    @ns.marshal_with(student_model)
+    def get(self,id):
+        student = Student.query.get(id)
+        return student
+    
+    @ns.expect(student_input_model)
+    @ns.marshal_with(student_model)
+    def put(self,id):
+        student=Student.query.get(id)
+        student.name=ns.payload['name']
+        student.course_id=ns.payload['course_id']   
+        db.session.commit()
+        return student,200
 
 @ns.route('/students') 
 class StudentAPI(Resource):
@@ -42,4 +66,4 @@ class StudentAPI(Resource):
         student=Student(name=ns.payload['name'],course_id=ns.payload['course_id'])
         db.session.add(student)
         db.session.commit()
-        return student,201
+        return student,200
