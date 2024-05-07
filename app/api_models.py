@@ -16,3 +16,12 @@ course_model = api.model("Course",{
     "students" : fields.List(fields.Nested(student_model))
 
 })
+
+course_input_model = api.model("CourseInput",{
+    "name" : fields.String,
+})
+
+student_input_model = api.model("StudentInput",{
+    "name" : fields.String,
+    "course_id":fields.Integer
+})
